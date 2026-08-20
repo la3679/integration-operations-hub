@@ -1,0 +1,42 @@
+:host { display: block; min-height: 100vh; }
+.topbar { display: flex; justify-content: space-between; gap: 2rem; align-items: center; padding: 2.5rem max(5vw, 1.25rem); color: white; background: linear-gradient(120deg, #172554, #1d4ed8 65%, #0ea5e9); }
+.topbar h1 { margin: .2rem 0 .4rem; font-size: clamp(1.8rem, 4vw, 2.7rem); letter-spacing: -.04em; }
+.topbar p { margin: 0; color: #dbeafe; }
+.topbar .eyebrow { text-transform: uppercase; letter-spacing: .14em; font-size: .74rem; font-weight: 700; color: #93c5fd; }
+.health { display: flex; align-items: center; gap: .6rem; padding: .7rem 1rem; border: 1px solid #60a5fa; border-radius: 999px; background: #1e3a8a80; white-space: nowrap; }
+.health span { width: .65rem; height: .65rem; border-radius: 50%; background: #4ade80; box-shadow: 0 0 0 .3rem #22c55e33; }
+main { padding: 1.6rem max(5vw, 1.25rem) 3rem; }
+.metrics { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-top: -2.6rem; }
+.metrics mat-card { padding: 1rem 1.2rem; border-radius: 14px; }
+.metrics span, .metrics small { color: #64748b; }
+.metrics strong { display: block; margin: .25rem 0; font-size: 1.4rem; }
+.workspace { display: grid; grid-template-columns: minmax(290px, .85fr) minmax(0, 1.65fr); gap: 1.2rem; margin-top: 1.3rem; }
+.workspace mat-card { border-radius: 14px; }
+.form-card form { display: flex; flex-direction: column; padding-top: 1rem; }
+.grid { display: grid; gap: .8rem; }
+.grid.two { grid-template-columns: 1fr 1fr; }
+.jobs-card mat-card-content { padding-top: 1rem; }
+.search { width: min(100%, 360px); }
+.table-wrap { overflow-x: auto; }
+table { width: 100%; }
+th { color: #475569; font-weight: 600; }
+.status { display: inline-flex; padding: .25rem .5rem; border-radius: 999px; font-size: .72rem; font-weight: 700; }
+.status.succeeded { color: #166534; background: #dcfce7; }
+.status.running, .status.queued { color: #1d4ed8; background: #dbeafe; }
+.status.partial { color: #92400e; background: #fef3c7; }
+.status.failed { color: #991b1b; background: #fee2e2; }
+.error { padding: .75rem; border-radius: 8px; color: #991b1b; background: #fee2e2; }
+.empty { padding: 2rem; text-align: center; color: #64748b; }
+code { font-size: .8rem; color: #334155; }
+
+@media (max-width: 900px) {
+  .workspace { grid-template-columns: 1fr; }
+  .topbar { align-items: flex-start; flex-direction: column; }
+}
+
+@media (max-width: 560px) {
+  .metrics, .grid.two { grid-template-columns: 1fr; }
+  .metrics { margin-top: 1rem; }
+  main { padding-top: 0; }
+}
+

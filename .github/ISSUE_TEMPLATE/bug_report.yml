@@ -1,0 +1,57 @@
+name: Bug report
+description: Report reproducible incorrect behavior
+title: "[Bug]: "
+labels: [bug]
+body:
+  - type: markdown
+    attributes:
+      value: Thanks for reporting a problem. Do not include secrets or real employee data.
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: What happened, and what did you expect?
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproduction steps
+      placeholder: |
+        1. Start...
+        2. Submit...
+        3. Observe...
+    validations:
+      required: true
+  - type: input
+    id: correlation
+    attributes:
+      label: Correlation ID
+      description: Include the trace ID if one was returned. Do not include tokens or payload data.
+  - type: dropdown
+    id: component
+    attributes:
+      label: Component
+      options:
+        - Angular web
+        - Node.js gateway
+        - Python transformer
+        - .NET legacy API
+        - PostgreSQL
+        - Docker/CI
+        - Documentation
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: OS, Docker/Node/Python/.NET versions, branch, and commit.
+    validations:
+      required: true
+  - type: textarea
+    id: logs
+    attributes:
+      label: Sanitized logs
+      description: Remove secrets, email addresses, tokens, and employee payloads.
+

@@ -1,0 +1,38 @@
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  validate-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '24'
+      - uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '8.0.x'
+      - name: Validate repository
+        run: python scripts/validate_repo.py
+      - name: Test transformer core
+        run: |
+          python -m pip install pydantic
+          python -m unittest discover services/transformer/tests
+      - name: Test gateway core
+        run: node --test services/gateway/test/*.test.ts
+      - name: Build gateway
+        working-directory: services/gateway
+        run: npm install && npm run build
+      - name: Build Angular app
+        working-directory: apps/web
+        run: npm install && npm run build
+      - name: Test .NET API
+        run: dotnet test services/legacy-api.Tests/LegacyApi.Tests.csproj
+

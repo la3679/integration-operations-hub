@@ -1,0 +1,72 @@
+name: integration-operations-hub
+
+services:
+  postgres:
+    image: postgres:16-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB:-integration_hub}
+      POSTGRES_USER: ${POSTGRES_USER:-integration_user}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD:-integration_password}
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+      - ./database/init.sql:/docker-entrypoint-initdb.d/001-init.sql:ro
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U ${POSTGRES_USER:-integration_user} -d ${POSTGRES_DB:-integration_hub}"]
+      interval: 5s
+      timeout: 3s
+      retries: 10
+
+  transformer:
+    build: ./services/transformer
+    environment:
+      DATABASE_URL: ${DATABASE_URL:-postgresql://integration_user:integration_password@postgres:5432/integration_hub}
+    ports:
+      - "8000:8000"
+    healthcheck:
+      test: ["CMD", "python", "-c", "import urllib.request; urllib.request.urlopen('http://localhost:8000/health')"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  legacy-api:
+    build: ./services/legacy-api
+    environment:
+      ASPNETCORE_URLS: http://+:8080
+      ConnectionStrings__Postgres: Host=postgres;Port=5432;Database=${POSTGRES_DB:-integration_hub};Username=${POSTGRES_USER:-integration_user};Password=${POSTGRES_PASSWORD:-integration_password}
+    ports:
+      - "8080:8080"
+    depends_on:
+      postgres:
+        condition: service_healthy
+    healthcheck:
+      test: ["CMD", "curl", "-fsS", "http://localhost:8080/health"]
+      interval: 10s
+      timeout: 3s
+      retries: 10
+
+  gateway:
+    build: ./services/gateway
+    environment:
+      PORT: 3000
+      TRANSFORMER_URL: http://transformer:8000
+      LEGACY_API_URL: http://legacy-api:8080
+      DEV_BEARER_TOKEN: ${DEV_BEARER_TOKEN:-integration-demo-token}
+    ports:
+      - "3000:3000"
+    depends_on:
+      transformer:
+        condition: service_healthy
+      legacy-api:
+        condition: service_healthy
+
+  web:
+    build: ./apps/web
+    ports:
+      - "4200:80"
+    depends_on:
+      - gateway
+
+volumes:
+  postgres-data:

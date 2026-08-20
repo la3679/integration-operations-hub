@@ -2,6 +2,7 @@ using LegacyApi.Data;
 using LegacyApi.Models;
 using LegacyApi.Services;
 using Microsoft.EntityFrameworkCore;
+using Xunit;
 
 namespace LegacyApi.Tests;
 
@@ -53,4 +54,3 @@ public sealed class EmployeeServiceTests
         Assert.Equal("E-901", results[0].EmployeeNumber);
     }
 }
-
